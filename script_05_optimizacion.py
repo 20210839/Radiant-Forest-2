@@ -574,6 +574,37 @@ def main() -> None:
     logger.info(narrativa["frase_oro_jurado"])
     logger.info(narrativa["frase_sensibilidad_capacidad_20pct"])
     logger.info("=" * 78)
+    # ==========================================================================
+    # ADICIÓN EXCLUSIVA: Generación de entregas/submission.csv para el validador
+    # ==========================================================================
+    dir_entregas = Path("entregas")
+    dir_entregas.mkdir(parents=True, exist_ok=True)
+    ruta_submission = dir_entregas / "submission.csv"
+
+    # Unimos la decisión al universo completo (df_scores) para cubrir todas las filas requeridas
+    ids_ganadores_sub = set(df_campana[col_id].values) if 'df_campana' in locals() else set()
+    df_sub_out = df_scores.copy()
+    df_sub_out["contactar"] = df_sub_out[col_id].isin(ids_ganadores_sub).astype(int)
+
+    # Ordenamiento comercial por valor esperado neto y probabilidad
+    df_sub_out = df_sub_out.sort_values(
+        by=["contactar", "valor_esperado_neto", "prob_calibrada"],
+        ascending=[False, False, False]
+    ).reset_index(drop=True)
+    df_sub_out["prioridad"] = df_sub_out.index + 1
+
+    # Estructura del entregable oficial
+    df_submission_final = pd.DataFrame({
+        col_id: df_sub_out[col_id],
+        "probabilidad_conversion": np.clip(df_sub_out["prob_calibrada"].fillna(0.0), 0.0, 1.0).round(6),
+        "monto_esperado": np.maximum(df_sub_out["monto_esperado_condicional"].fillna(0.0), 0.0).round(2),
+        "valor_esperado": np.maximum(df_sub_out["valor_esperado"].fillna(0.0), 0.0).round(2),
+        "contactar": df_sub_out["contactar"],
+        "prioridad": df_sub_out["prioridad"],
+    })
+
+    df_submission_final.to_csv(ruta_submission, index=False, encoding="utf-8")
+    logger.info(f"✔ Entregable oficial generado con éxito en: {ruta_submission} ({len(df_submission_final):,} filas)")
     logger.info(f"Lista final de contactos exportada en: {ruta_csv} ({len(df_entrega_final):,} empresas).")
     logger.info("=== 05_OPTIMIZACION FINALIZADO CON ÉXITO ===")
 
