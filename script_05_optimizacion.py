@@ -574,9 +574,7 @@ def main() -> None:
     logger.info(narrativa["frase_oro_jurado"])
     logger.info(narrativa["frase_sensibilidad_capacidad_20pct"])
     logger.info("=" * 78)
-    # ==========================================================================
-    # ADICIÓN EXCLUSIVA: Generación de entregas/submission.csv para el validador
-    # ==========================================================================
+    # Entragable 1 
     dir_entregas = Path("entregas")
     dir_entregas.mkdir(parents=True, exist_ok=True)
     ruta_submission = dir_entregas / "submission.csv"
@@ -611,3 +609,6 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+
+
