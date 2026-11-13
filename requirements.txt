@@ -1,0 +1,28 @@
+# ==============================================================================
+# Dependencias del Pipeline DataFest 2026 - Caso Factoring
+# Compatible con Python 3.12.10 (versiones mínimas con ruedas precompiladas)
+# ==============================================================================
+
+# --- Núcleo de datos, cálculo numérico y visualización (Scripts 01 a 05) ---
+numpy>=1.26.4
+pandas>=2.2.0
+matplotlib>=3.8.3
+
+# --- Lectura y escritura de Parquet y Excel (datafest_comun, 02, 03, 04, 05) ---
+pyarrow>=15.0.0
+openpyxl>=3.1.2
+
+# --- Modelamiento base, calibración y métricas (Script 04) ---
+scikit-learn>=1.4.2
+
+# --- Optimización matemática MILP para asignación comercial (Script 05) ---
+scipy>=1.12.0
+
+# --- Gradient Boosting, ajuste bayesiano y explicabilidad (Script 04) ---
+lightgbm>=4.3.0
+optuna>=3.6.0
+shap>=0.46.0
+
+# --- Motores de boosting de respaldo (opcionales si ya usas LightGBM) ---
+xgboost>=2.0.3
+catboost>=1.2.5
